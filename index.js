@@ -3,9 +3,9 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const cors = require("cors");
-const productRoutes = require("../routes/productRoutes");
-const featuredRoutes = require("../routes/featuredCategoryRoutes");
-const popularProducts = require("../routes/popularProductRoutes");
+const productRoutes = require("./routes/productRoutes.js");
+const featuredRoutes = require("./routes/featuredCategoryRoutes.js");
+const popularProducts = require("./routes/popularProductRoutes.js");
 // Middleware
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Middleware to parse JSON bodies in requests
