@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router(); // Initialize the router
-const connectCollection = require("../helper/connectCollection");
 const moment = require("moment"); // Using moment.js to handle date comparisons (optional)
+const connectCollection = require("../helper/connectCollection");
 
 router.get("/deals", async (req, res) => {
   try {
-    const products = await connectCollection();
+    const { products } = await connectCollection();
     if (!products || products.length === 0) {
       return res.status(404).json({ message: "No deals found." });
     }
@@ -23,8 +23,10 @@ router.get("/deals", async (req, res) => {
     }
     const sort = dealsOfTheDay.sort((a, b) => {
       // Sort deals based on their discount (highest to lowest)
-      return b.discount - a.discount;
+      // return  a.price - b.price;
+      return b.price - a.price;
     });
+
     // limit the number of deals
     const result = sort.slice(0, 15);
 
