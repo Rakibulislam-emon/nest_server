@@ -1,14 +1,14 @@
 // routes/productRoutes.js
 const express = require("express");
-const connectToDatabase = require("../config/db");
+// const connectToDatabase = require("../config/db");
+const connectCollection = require("../helper/connectCollection");
 const router = express.Router();
 
-// GET /api/products/featured-categories
+
 // Fetch featured categories with products
 router.get("/products/featured-categories", async (req, res) => {
   try {
-    const db = await connectToDatabase();
-    const products = await db.collection("all_products").find().toArray();
+    const {products} = await connectCollection()
 
     // Extract categories and remove duplicates using Set
     const categories = [
