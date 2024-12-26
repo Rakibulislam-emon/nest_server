@@ -4,11 +4,10 @@ const express = require("express");
 const connectCollection = require("../helper/connectCollection");
 const router = express.Router();
 
-
 // Fetch featured categories with products
 router.get("/products/featured-categories", async (req, res) => {
   try {
-    const {products} = await connectCollection()
+    const { products } = await connectCollection();
 
     // Extract categories and remove duplicates using Set
     const categories = [
