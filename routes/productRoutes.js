@@ -19,10 +19,10 @@ router.get("/products", async (req, res) => {
       sortOrder,
       page = 1,
       limit = 10,
+      searchQuery,
     } = req.query;
 
-    
-
+   
     // Decode and normalize category and availability
     let decodedCategory = category
       ? decodeURIComponent(category).trim().toLowerCase()
@@ -40,6 +40,13 @@ router.get("/products", async (req, res) => {
 
       let productCategory = product.category.trim().toLowerCase();
       let productAvailability = product.available.trim().toLowerCase();
+      // Search functionality: check if searchQuery matches product name or description
+      const matchesSearchQuery =
+        searchQuery &&
+        (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()));
 
       if (decodedCategory && productCategory !== decodedCategory) return false;
       if (minPrice && product.price < minPrice) return false;
@@ -50,6 +57,8 @@ router.get("/products", async (req, res) => {
       if (minDiscountNum && product.discount < minDiscountNum) return false;
       if (minDate && new Date(product.exp) < new Date(minDate)) return false;
       if (!product.image) return false;
+      // If searchQuery is provided, ensure product matches the search query
+      if (searchQuery && !matchesSearchQuery) return false;
 
       return true;
     });
@@ -68,7 +77,7 @@ router.get("/products", async (req, res) => {
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-console.log(filteredProducts,'from 73');
+    // console.log(filteredProducts, "from 73");
     res.json({
       totalProducts: filteredProducts.length,
       currentPage: page,
