@@ -6,8 +6,9 @@ router.get("/products", async (req, res) => {
   try {
     const { products } = await connectCollection();
 
-    // Get filter and sorting parameters from the request query
+    // Get filter, sorting, and pagination parameters from the request query
     const {
+      categoryProduct,
       category,
       minPrice,
       maxPrice,
@@ -17,8 +18,11 @@ router.get("/products", async (req, res) => {
       minDate,
       sortField,
       sortOrder,
+      page = 1,
+      limit = 10,
     } = req.query;
 
+    
     // Decode and normalize category and availability
     let decodedCategory = category
       ? decodeURIComponent(category).trim().toLowerCase()
@@ -32,6 +36,9 @@ router.get("/products", async (req, res) => {
 
     // Filter products based on the parameters
     let filteredProducts = products.filter((product) => {
+      // category product from shop page carousel
+      if (categoryProduct && product.category !== categoryProduct) return false;
+
       let productCategory = product.category.trim().toLowerCase();
       let productAvailability = product.available.trim().toLowerCase();
 
@@ -58,7 +65,17 @@ router.get("/products", async (req, res) => {
       });
     }
 
-    res.json(filteredProducts);
+    // Apply pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+    res.json({
+      totalProducts: filteredProducts.length,
+      currentPage: page,
+      totalPages: Math.ceil(filteredProducts.length / limit),
+      products: paginatedProducts,
+    });
   } catch (err) {
     console.error("Error fetching products:", err);
     res.status(500).json({ message: "Server error while fetching products." });
