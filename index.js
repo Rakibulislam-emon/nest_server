@@ -7,7 +7,10 @@ const productRoutes = require("./routes/productRoutes.js");
 const featuredRoutes = require("./routes/featuredCategoryRoutes.js");
 const popularProducts = require("./routes/popularProductRoutes.js");
 const deals = require("./routes/dealsRoute.js");
-const productDetail = require('./routes/productDetails.js')
+const productDetail = require("./routes/productDetails.js");
+const registrations = require("./routes/Authentication/registration.js");
+const paymentRoutes = require("./routes/payment/payment.js");
+
 // Middleware
 // Use CORS to allow requests from your frontend domain
 app.use(
@@ -25,6 +28,11 @@ app.use("/api", featuredRoutes);
 app.use("/api", popularProducts);
 app.use("/api", deals);
 app.use("/api", productDetail);
+app.use("/api", registrations);
+
+app.use('/api/payment', paymentRoutes);
+
+
 
 // Default route
 app.get("/", (req, res) => {
